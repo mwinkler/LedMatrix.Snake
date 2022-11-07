@@ -11,10 +11,15 @@ matrix = Matrix(width=32, height=32)
 sprite_sheet, palette = adafruit_imageload.load("tiles.bmp", bitmap=displayio.Bitmap, palette=displayio.Palette)
 palette.make_transparent(0)
 
-# create tile group
+# create group and tile group
+group = displayio.Group()
 tile = displayio.TileGrid(sprite_sheet, pixel_shader=palette)
+group.append(tile)
 
 # show
-matrix.display.root_group.append(tile)
-matrix.display.show()
+matrix.display.show(group)
+#print(dir(matrix.display))
+#dir(matrix)
+#matrix.display.root_group.append(tile)
+#matrix.display.show()
 
