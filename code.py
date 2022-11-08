@@ -1,6 +1,7 @@
 import board
 import displayio
 import adafruit_imageload
+import time
 from adafruit_matrixportal.matrix import Matrix
 
 # init display
@@ -17,9 +18,10 @@ tile = displayio.TileGrid(sprite_sheet, pixel_shader=palette)
 group.append(tile)
 
 # show
-matrix.display.show(group)
 #print(dir(matrix.display))
-#dir(matrix)
+matrix.display.show(group)
 #matrix.display.root_group.append(tile)
 #matrix.display.show()
 
+while True:
+    time.sleep(1)
