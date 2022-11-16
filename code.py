@@ -6,26 +6,31 @@ from controller import Controller
 from snake import Snake
 
 # init display
-#matrix = Matrix(width=32, height=32)
+matrix = Matrix(width=32, height=32)
 
 frame_counter = 0
-game_tick = 10
+game_tick = 20
 
 contoller = Controller(board.I2C())
-#snake = Snake(matrix.display)
 
-#matrix.display.show()
+group = displayio.Group()
+
+snake = Snake(matrix.display.width, matrix.display.height, group)
+
+matrix.display.show(group)
 
 while True:
     
     frame_counter += 1
+    contoller.update()
 
     if (frame_counter > game_tick):
         
         # reset frame counter
         frame_counter = 0
 
-        #snake.move()
+        snake.set_direction(contoller.direction)
+        snake.move()
 
         # eat food
         # if (snake_pos == food_pos):
@@ -45,7 +50,7 @@ while True:
         # if (snake_pos[1] >= FIELD_HEIGHT):
         #     snake_pos = (snake_pos[0], 0)
 
-        print(contoller.get_direction())
+        #print(contoller.get_direction())
 
 
     time.sleep(0.01)

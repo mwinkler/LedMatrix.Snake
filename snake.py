@@ -1,18 +1,18 @@
-import framebufferio
+import displayio
 import random
 import color
 from layer import Layer
 
 class Snake(Layer):
     
-    def __init__(self, framebuffer: framebufferio.FramebufferDisplay) -> None:
-        super().__init__(framebuffer)
+    def __init__(self, width: int, height: int, container: displayio.Group) -> None:
+        super().__init__(width, height, container)
 
         self.reset()
 
     
     def reset(self):
-        self.head = (random.randint(5, self.framebuffer.width - 5), random.randint(5, self.framebuffer.height - 5)) # (x, y)
+        self.head = (random.randint(5, self.bitmap.width - 5), random.randint(5, self.bitmap.height - 5)) # (x, y)
         self.direction = (0, 0)    # (x, y)
         self.color = color.rnd()
         self.body = [self.head]  # array with all
@@ -21,7 +21,9 @@ class Snake(Layer):
     
     def set_direction(self, direction: tuple[int, int]):
         # prevent reverse direction
-        if (self.direction[0] - direction[0] in [-2, 0] or self.direction[1] - direction[1] in [-2, 0]):
+        #if (self.direction[0] - direction[0] in [-2, 0] or self.direction[1] - direction[1] in [-2, 0]):
+        #    return
+        if (direction == (0, 0)):
             return
         
         self.direction = direction

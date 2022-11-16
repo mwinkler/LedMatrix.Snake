@@ -17,5 +17,4 @@ yellow = palette[4]
 count = len(palette)
 
 def rnd():
-    print(dir(random))
-    return random.randint(1, count)
+    return random.randint(1, count - 1)
