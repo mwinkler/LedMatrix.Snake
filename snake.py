@@ -1,7 +1,7 @@
 import framebufferio
 import random
+import color
 from layer import Layer
-from color import Color
 
 class Snake(Layer):
     
@@ -14,7 +14,7 @@ class Snake(Layer):
     def reset(self):
         self.head = (random.randint(5, self.framebuffer.width - 5), random.randint(5, self.framebuffer.height - 5)) # (x, y)
         self.direction = (0, 0)    # (x, y)
-        self.color = Color.random()
+        self.color = color.rnd()
         self.body = [self.head]  # array with all
         self.length = 5
 
@@ -27,11 +27,11 @@ class Snake(Layer):
         self.direction = direction
 
 
-    def mvoe(self):
+    def move(self):
         # delete snake tail
         if (len(self.body) > self.length):
             snake_tail = self.body.pop(0)
-            self.bitmap[snake_tail] = Color.non
+            self.bitmap[snake_tail] = color.non
 
         # set new snake head position and add to body
         self.head = (self.head[0] + self.direction[0], self.head[1] + self.direction[1])

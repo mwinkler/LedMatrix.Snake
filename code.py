@@ -1,17 +1,20 @@
 import board
 import time
+import displayio
 from adafruit_matrixportal.matrix import Matrix
-import random
-from analogio import AnalogIn
-
+from controller import Controller
+from snake import Snake
 
 # init display
-FIELD_WIDTH = 32
-FIELD_HEIGHT = 32
-matrix = Matrix(width=FIELD_WIDTH, height=FIELD_HEIGHT)
+#matrix = Matrix(width=32, height=32)
 
 frame_counter = 0
 game_tick = 10
+
+contoller = Controller(board.I2C())
+#snake = Snake(matrix.display)
+
+#matrix.display.show()
 
 while True:
     
@@ -21,6 +24,8 @@ while True:
         
         # reset frame counter
         frame_counter = 0
+
+        #snake.move()
 
         # eat food
         # if (snake_pos == food_pos):
@@ -40,6 +45,7 @@ while True:
         # if (snake_pos[1] >= FIELD_HEIGHT):
         #     snake_pos = (snake_pos[0], 0)
 
+        print(contoller.get_direction())
 
 
     time.sleep(0.01)
