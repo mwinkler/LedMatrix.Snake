@@ -22,15 +22,19 @@ matrix.display.show(group)
 while True:
     
     frame_counter += 1
+    
+    # handle controller input
     contoller.update()
+    snake.set_direction(contoller.direction)
 
     if (frame_counter > game_tick):
         
         # reset frame counter
         frame_counter = 0
 
-        snake.set_direction(contoller.direction)
         snake.move()
+        snake.check_collision()
+        snake.render()
 
         # eat food
         # if (snake_pos == food_pos):

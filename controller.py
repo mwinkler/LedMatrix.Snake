@@ -20,3 +20,5 @@ class Controller():
             self.direction = (0, 1)
         elif (y > 170):
             self.direction = (0, -1)
+        else:
+            self.direction = (0, 0)
