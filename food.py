@@ -1,18 +1,17 @@
-import framebufferio
+import displayio
 import random
 from layer import Layer
-from color import Color
+import color
 
 
 class Food(Layer):
 
-    def __init__(self, framebuffer: framebufferio.FramebufferDisplay) -> None:
-        super().__init__(framebuffer)
+    def __init__(self, field_width: int, field_height: int, container: displayio.Group):
+        super().__init__(field_width, field_height, container)
         self.new_position()
 
     def new_position(self):
-        self.position = (random.randint(0, self.framebuffer.width - 1), random.randint(0, self.framebuffer.height - 1))
-        self.color = Color.random()
-
-    def render(self):
+        self.position = (random.randint(0, self.bitmap.width - 1), random.randint(0, self.bitmap.height - 1))
+        self.color = color.rnd()
+        self.bitmap.fill(color.non)
         self.bitmap[self.position] = self.color

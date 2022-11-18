@@ -4,37 +4,27 @@ import displayio
 from adafruit_matrixportal.matrix import Matrix
 from controller import Controller
 from snake import Snake
+from food import Food
 
-# init display
 matrix = Matrix(width=32, height=32)
-
-frame_counter = 0
-game_tick = 20
-
 contoller = Controller(board.I2C())
-
 group = displayio.Group()
-
 snake = Snake(matrix.display.width, matrix.display.height, group)
+food = Food(matrix.display.width, matrix.display.height, group)
 
 matrix.display.show(group)
 
 while True:
     
-    frame_counter += 1
-    
     # handle controller input
     contoller.update()
     snake.set_direction(contoller.direction)
 
-    if (frame_counter > game_tick):
-        
-        # reset frame counter
-        frame_counter = 0
 
-        snake.move()
-        snake.check_collision()
-        snake.render()
+    snake.move()
+    snake.check_collision()
+    snake.check_food(food)
+    snake.render()
 
         # eat food
         # if (snake_pos == food_pos):
