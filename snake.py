@@ -15,11 +15,10 @@ class Snake(Layer):
     
     def reset(self):
         self.bitmap.fill(color.non)
-        self.head = (random.randint(5, self.bitmap.width - 5), random.randint(5, self.bitmap.height - 5)) # (x, y)
         self.direction = (1, 0)    # (x, y)
-        self.color = color.rnd()
-        self.body = [self.head]
+        self.body = [(random.randint(5, self.bitmap.width - 5), random.randint(5, self.bitmap.height - 5))]
         self.length = 5
+        self.color = [color.pink] + [color.blue for _ in range(self.length - 1)]
         self.collision = False
         self.speed = 3  # pixel per second
         self.ticker = Ticker()
@@ -66,10 +65,10 @@ class Snake(Layer):
 
     def _move(self):
         # set head by direction
-        self.head = (self.head[0] + self.direction[0], self.head[1] + self.direction[1])
+        next = (self.body[-1][0] + self.direction[0], self.body[-1][1] + self.direction[1])
 
-        # add head to body
-        self.body.append(self.head)
+        # add next to body
+        self.body.append(next)
 
         # delete snake tail
         if (len(self.body) > self.length):
@@ -77,22 +76,24 @@ class Snake(Layer):
 
 
     def _check_collision_food(self, food: Food):
-        if (food.position == self.head):
+        if (food.position == self.body[-1]):
             self.length += 1
+            self.color.append(food.color)
+            self.body.append(food.position)
             food.new_position()
 
 
     def _check_collision_border_and_self(self):
         # border x
-        if (self.head[0] < 0 or self.head[0] >= self.bitmap.width):
+        if (self.body[-1][0] < 0 or self.body[-1][0] >= self.bitmap.width):
             self.collision = True
         
         # border y
-        if (self.head[1] < 0 or self.head[1] >= self.bitmap.height):
+        if (self.body[-1][1] < 0 or self.body[-1][1] >= self.bitmap.height):
             self.collision = True
 
         # check head collide with own body
-        if (self.head in self.body[:-1]):
+        if (self.body[-1] in self.body[:-1]):
             self.collision = True
 
 
@@ -105,7 +106,7 @@ class Snake(Layer):
         self.bitmap.fill(color.non)
 
         # draw snake
-        for pos in self.body:
-            self.bitmap[pos] = self.color
+        for i in range(len(self.body)):
+            self.bitmap[self.body[i]] = self.color[-1 - i]
 
         
