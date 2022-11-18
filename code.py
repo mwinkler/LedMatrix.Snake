@@ -16,7 +16,7 @@ matrix.display.show(group)
 
 while True:
     
-    contoller.update()
+    contoller.tick()
     snake.tick(contoller, food)
 
     if (snake.collision):

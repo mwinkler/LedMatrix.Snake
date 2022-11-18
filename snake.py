@@ -26,14 +26,14 @@ class Snake(Layer):
 
     
     def tick(self, controller: Controller, food: Food):
-        # handle controller input
-        self._process_controller(controller)
-
         # abort if not enough ticks are elapsed for next move
         if (self.ticker.elapsed() < 1000.0 / self.speed):
             return
         else:
             self.ticker.reset()
+
+        # handle controller input
+        self._process_controller(controller)
 
         # move snake
         self._move()
@@ -47,18 +47,21 @@ class Snake(Layer):
 
     
     def _process_controller(self, controller: Controller):
+        # get controller input
+        (direction, button_top, button_bottom) = controller.poll()
+
         # increase speed when button pressed
-        self.speed = 10 if controller.button_bottom else 3
+        self.speed = 10 if button_bottom else 3
 
         # ignore when no direction is set
-        if (controller.direction == (0, 0)):
+        if (direction == (0, 0)):
             return
 
         # prevent reverse direction
-        if (self.direction[0] - controller.direction[0] in [-2, 2] or self.direction[1] - controller.direction[1] in [-2, 2]):
+        if (self.direction[0] - direction[0] in [-2, 2] or self.direction[1] - direction[1] in [-2, 2]):
             return
         
-        self.direction = controller.direction
+        self.direction = direction
 
 
     def _move(self):
