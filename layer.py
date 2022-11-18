@@ -4,7 +4,8 @@ import color
 
 class Layer():
 
-   def __init__(self, width: int, height: int, container: displayio.Group):
-      self.bitmap = displayio.Bitmap(width, height, color.count)
-      self.tile = displayio.TileGrid(self.bitmap, pixel_shader=color.palette)
-      container.append(self.tile)
+   def __init__(self, framebuffer: framebufferio.FramebufferDisplay, container: displayio.Group):
+      self._framebuffer = framebuffer
+      self._bitmap = displayio.Bitmap(framebuffer.width, framebuffer.height, color.count)
+      self._tile = displayio.TileGrid(self._bitmap, pixel_shader=color.palette)
+      container.append(self._tile)

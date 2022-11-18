@@ -1,4 +1,5 @@
 import displayio
+import framebufferio
 import random
 import color
 from food import Food
@@ -8,15 +9,15 @@ from controller import Controller
 
 class Snake(Layer):
     
-    def __init__(self, width: int, height: int, container: displayio.Group):
-        super().__init__(width, height, container)
+    def __init__(self, framebuffer: framebufferio.FramebufferDisplay, container: displayio.Group):
+        super().__init__(framebuffer, container)
         self.reset()
 
     
     def reset(self):
-        self.bitmap.fill(color.non)
+        self._bitmap.fill(color.non)
         self.direction = (1, 0)    # (x, y)
-        self.body = [(random.randint(5, self.bitmap.width - 5), random.randint(5, self.bitmap.height - 5))]
+        self.body = [(random.randint(5, self._bitmap.width - 5), random.randint(5, self._bitmap.height - 5))]
         self.length = 5
         self.color = [color.pink] + [color.blue for _ in range(self.length - 1)]
         self.collision = False
@@ -85,11 +86,11 @@ class Snake(Layer):
 
     def _check_collision_border_and_self(self):
         # border x
-        if (self.body[-1][0] < 0 or self.body[-1][0] >= self.bitmap.width):
+        if (self.body[-1][0] < 0 or self.body[-1][0] >= self._bitmap.width):
             self.collision = True
         
         # border y
-        if (self.body[-1][1] < 0 or self.body[-1][1] >= self.bitmap.height):
+        if (self.body[-1][1] < 0 or self.body[-1][1] >= self._bitmap.height):
             self.collision = True
 
         # check head collide with own body
@@ -102,11 +103,17 @@ class Snake(Layer):
         if (self.collision):
             return
 
+        # disable auto refresh while drawing the snake
+        self._framebuffer.auto_refresh = False
+
         # clear
-        self.bitmap.fill(color.non)
+        self._bitmap.fill(color.non)
 
         # draw snake
         for i in range(len(self.body)):
-            self.bitmap[self.body[i]] = self.color[-1 - i]
+            self._bitmap[self.body[-1 - i]] = self.color[i]
+
+        # reenable auto refresh
+        self._framebuffer.auto_refresh = True
 
         
