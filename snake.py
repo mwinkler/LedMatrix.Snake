@@ -16,7 +16,7 @@ class Snake(Layer):
     def reset(self):
         self.bitmap.fill(color.non)
         self.head = (random.randint(5, self.bitmap.width - 5), random.randint(5, self.bitmap.height - 5)) # (x, y)
-        self.direction = (0, 0)    # (x, y)
+        self.direction = (1, 0)    # (x, y)
         self.color = color.rnd()
         self.body = [self.head]
         self.length = 5
@@ -25,8 +25,29 @@ class Snake(Layer):
         self.ticker = Ticker()
 
     
-    def process_controller(self, controller: Controller):
-        
+    def tick(self, controller: Controller, food: Food):
+        # handle controller input
+        self._process_controller(controller)
+
+        # abort if not enough ticks are elapsed for next move
+        if (self.ticker.elapsed() < 1000.0 / self.speed):
+            return
+        else:
+            self.ticker.reset()
+
+        # move snake
+        self._move()
+
+        # check collisions
+        self._check_collision_border_and_self()
+        self._check_collision_food(food)
+
+        # render
+        self._render()
+
+    
+    def _process_controller(self, controller: Controller):
+        # increase speed when button pressed
         self.speed = 10 if controller.button_bottom else 3
 
         # ignore when no direction is set
@@ -40,57 +61,48 @@ class Snake(Layer):
         self.direction = controller.direction
 
 
-    def move(self):
-        # do nothing, if not enough ticks are elapsed
-        if (self.ticker.elapsed() < 1000.0 / self.speed):
-            return
-
-        # reset ticker
-        self.ticker.reset()
-
+    def _move(self):
         # set head by direction
         self.head = (self.head[0] + self.direction[0], self.head[1] + self.direction[1])
 
         # add head to body
         self.body.append(self.head)
 
-
-    def check_collision(self):
-        self.collision = self.__check_collision(None)
-        if (self.collision):
-            self.reset()
-        return self.collision
+        # delete snake tail
+        if (len(self.body) > self.length):
+            self.body.pop(0)
 
 
-    def check_food(self, food: Food):
+    def _check_collision_food(self, food: Food):
         if (food.position == self.head):
             self.length += 1
             food.new_position()
 
 
-    def __check_collision(self, object: list[tuple[int, int]]):
+    def _check_collision_border_and_self(self):
         # border x
         if (self.head[0] < 0 or self.head[0] >= self.bitmap.width):
-            return True
+            self.collision = True
         
         # border y
         if (self.head[1] < 0 or self.head[1] >= self.bitmap.height):
-            return True
+            self.collision = True
 
-        return False
+        # check head collide with own body
+        if (self.head in self.body[:-1]):
+            self.collision = True
 
 
-    def render(self):
+    def _render(self):
         # stop render on collion
         if (self.collision):
             return
 
-        # delete snake tail
-        if (len(self.body) > self.length):
-            snake_tail = self.body.pop(0)
-            self.bitmap[snake_tail] = color.non
-        
-        # render snake head
-        self.bitmap[self.head] = self.color
+        # clear
+        self.bitmap.fill(color.non)
+
+        # draw snake
+        for pos in self.body:
+            self.bitmap[pos] = self.color
 
         

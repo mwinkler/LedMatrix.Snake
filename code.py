@@ -17,14 +17,10 @@ matrix.display.show(group)
 while True:
     
     contoller.update()
-    snake.process_controller(contoller)
-    snake.move()
-    snake.check_collision()
-    snake.check_food(food)
-    snake.render()
+    snake.tick(contoller, food)
 
-       
-
+    if (snake.collision):
+        snake.reset()
 
         # gard sname pos
         # if (snake_pos[0] < 0):
