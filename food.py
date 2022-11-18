@@ -9,9 +9,9 @@ class Food(Layer):
 
     def __init__(self, framebuffer: framebufferio.FramebufferDisplay, container: displayio.Group):
         super().__init__(framebuffer, container)
-        self.new_position()
+        self.new()
 
-    def new_position(self):
+    def new(self):
         self.position = (random.randint(0, self._bitmap.width - 1), random.randint(0, self._bitmap.height - 1))
         self.color = color.rnd()
         self._bitmap.fill(color.non)

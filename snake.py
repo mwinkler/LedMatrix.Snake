@@ -21,7 +21,9 @@ class Snake(Layer):
         self.length = 5
         self.color = [color.pink] + [color.blue for _ in range(self.length - 1)]
         self.collision = False
-        self.speed = 3  # pixel per second
+        self.speed_fast = 10    # pixel per second
+        self.speed_default = 3  # pixel per second
+        self.speed = self.speed_default
         self.ticker = Ticker()
 
     
@@ -47,20 +49,21 @@ class Snake(Layer):
 
     
     def _process_controller(self, controller: Controller):
-        # get controller input
-        (direction, button_top, button_bottom) = controller.poll()
+        # poll last controller input
+        (direction, _, button_bottom) = controller.poll()
 
         # increase speed when button pressed
-        self.speed = 10 if button_bottom else 3
+        self.speed = self.speed_fast if button_bottom else self.speed_default
 
-        # ignore when no direction is set
+        # abort when no direction is set
         if (direction == (0, 0)):
             return
 
-        # prevent reverse direction
+        # abort when player tries to invert direction
         if (self.direction[0] - direction[0] in [-2, 2] or self.direction[1] - direction[1] in [-2, 2]):
             return
         
+        # set new snake direction
         self.direction = direction
 
 
@@ -81,32 +84,32 @@ class Snake(Layer):
             self.length += 1
             self.color.append(food.color)
             self.body.append(food.position)
-            food.new_position()
+            food.new()
 
 
     def _check_collision_border_and_self(self):
-        # border x
+        # leave screen x
         if (self.body[-1][0] < 0 or self.body[-1][0] >= self._bitmap.width):
             self.collision = True
         
-        # border y
+        # leave screen y
         if (self.body[-1][1] < 0 or self.body[-1][1] >= self._bitmap.height):
             self.collision = True
 
-        # check head collide with own body
+        # check if head collide with own body
         if (self.body[-1] in self.body[:-1]):
             self.collision = True
 
 
     def _render(self):
-        # stop render on collion
+        # stop render on collision
         if (self.collision):
             return
 
         # disable auto refresh while drawing the snake
         self._framebuffer.auto_refresh = False
 
-        # clear
+        # clear screen
         self._bitmap.fill(color.non)
 
         # draw snake
@@ -115,5 +118,3 @@ class Snake(Layer):
 
         # reenable auto refresh
         self._framebuffer.auto_refresh = True
-
-        
