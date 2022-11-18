@@ -3,7 +3,8 @@ import random
 import color
 from food import Food
 from layer import Layer
-import ticker
+from ticker import Ticker
+from controller import Controller
 
 class Snake(Layer):
     
@@ -20,29 +21,32 @@ class Snake(Layer):
         self.body = [self.head]
         self.length = 5
         self.collision = False
-        self.speed = 2.0  # pixel per second
-        self.last_move_tick = ticker.get_ticks()
+        self.speed = 3  # pixel per second
+        self.ticker = Ticker()
 
     
-    def set_direction(self, direction: tuple[int, int]):
+    def process_controller(self, controller: Controller):
+        
+        self.speed = 10 if controller.button_bottom else 3
+
         # ignore when no direction is set
-        if (direction == (0, 0)):
+        if (controller.direction == (0, 0)):
             return
 
         # prevent reverse direction
-        if (self.direction[0] - direction[0] in [-2, 2] or self.direction[1] - direction[1] in [-2, 2]):
+        if (self.direction[0] - controller.direction[0] in [-2, 2] or self.direction[1] - controller.direction[1] in [-2, 2]):
             return
         
-        self.direction = direction
+        self.direction = controller.direction
 
 
     def move(self):
         # do nothing, if not enough ticks are elapsed
-        if (ticker.ticks_diff(ticker.get_ticks(), self.last_move_tick) < 1000.0 / self.speed):
+        if (self.ticker.elapsed() < 1000.0 / self.speed):
             return
 
-        # remember last move tick
-        self.last_move_tick = ticker.get_ticks()
+        # reset ticker
+        self.ticker.reset()
 
         # set head by direction
         self.head = (self.head[0] + self.direction[0], self.head[1] + self.direction[1])

@@ -6,6 +6,8 @@ class Controller():
     def __init__(self, i2c: busio.I2C):
         self.nc = adafruit_nunchuk.Nunchuk(i2c)
         self.direction = (0, 0)
+        self.button_top = False
+        self.button_bottom = False
 
     def update(self):
         # x: left=28, center=123, right=225
@@ -22,3 +24,6 @@ class Controller():
             self.direction = (0, -1)
         else:
             self.direction = (0, 0)
+
+        self.button_top = self.nc.buttons[0]
+        self.button_bottom = self.nc.buttons[1]

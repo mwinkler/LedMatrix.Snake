@@ -16,22 +16,14 @@ matrix.display.show(group)
 
 while True:
     
-    # handle controller input
     contoller.update()
-    snake.set_direction(contoller.direction)
-
-
+    snake.process_controller(contoller)
     snake.move()
     snake.check_collision()
     snake.check_food(food)
     snake.render()
 
-        # eat food
-        # if (snake_pos == food_pos):
-        #     snake_color = food_color
-        #     food_pos = create_food()
-        #     food_color = get_random_color()
-        #     snake_length += 2
+       
 
 
         # gard sname pos
