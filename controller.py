@@ -1,5 +1,8 @@
 import busio
 import adafruit_nunchuk
+from collections import namedtuple
+
+ControllerState = namedtuple("ControllerState", "direction button_top button_bottom")
 
 class Controller():
 
@@ -32,6 +35,6 @@ class Controller():
             self._button_bottom = True
 
     def poll(self):
-        ret = (self._direction, self._button_top, self._button_bottom)
+        ret = ControllerState(self._direction, self._button_top, self._button_bottom)
         self._reset()
         return ret

@@ -21,7 +21,7 @@ class Snake(Layer):
         self.length = 5
         self.color = [color.pink] + [color.blue for _ in range(self.length - 1)]
         self.collision = False
-        self.speed_fast = 10    # pixel per second
+        self.speed_fast = 15    # pixel per second
         self.speed_default = 3  # pixel per second
         self.speed = self.speed_default
         self.ticker = Ticker()
@@ -50,21 +50,21 @@ class Snake(Layer):
     
     def _process_controller(self, controller: Controller):
         # poll last controller input
-        (direction, _, button_bottom) = controller.poll()
+        state = controller.poll()
 
         # increase speed when button pressed
-        self.speed = self.speed_fast if button_bottom else self.speed_default
+        self.speed = self.speed_fast if state.button_bottom else self.speed_default
 
         # abort when no direction is set
-        if (direction == (0, 0)):
+        if (state.direction == (0, 0)):
             return
 
         # abort when player tries to invert direction
-        if (self.direction[0] - direction[0] in [-2, 2] or self.direction[1] - direction[1] in [-2, 2]):
+        if (self.direction[0] - state.direction[0] in [-2, 2] or self.direction[1] - state.direction[1] in [-2, 2]):
             return
         
         # set new snake direction
-        self.direction = direction
+        self.direction = state.direction
 
 
     def _move(self):
@@ -83,7 +83,6 @@ class Snake(Layer):
         if (food.position == self.body[-1]):
             self.length += 1
             self.color.append(food.color)
-            self.body.append(food.position)
             food.new()
 
 

@@ -6,7 +6,7 @@ from controller import Controller
 from snake import Snake
 from food import Food
 
-matrix = Matrix(width=32, height=32)
+matrix = Matrix(width=64, height=32, color_order="GBR")
 contoller = Controller(board.I2C())
 group = displayio.Group()
 snake = Snake(matrix.display, group)
