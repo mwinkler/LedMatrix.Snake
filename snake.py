@@ -27,14 +27,14 @@ class Snake(Layer):
 
     
     def tick(self, controller: Controller, food: Food):
-        # abort if not enough ticks are elapsed for next move
+        # wait until next render cycle by snake speed
         if (self.ticker.elapsed() < 1000.0 / self.speed):
             return
         else:
             self.ticker.reset()
 
         # handle controller input
-        self.process_controller(controller)
+        self.handle_controller_input(controller)
 
         # move snake
         self.move()
@@ -47,7 +47,7 @@ class Snake(Layer):
         self.render()
 
     
-    def process_controller(self, controller: Controller):
+    def handle_controller_input(self, controller: Controller):
         # poll last controller input
         state = controller.poll()
 
@@ -67,11 +67,11 @@ class Snake(Layer):
 
 
     def move(self):
-        # set head by direction
-        next = (self.body[-1][0] + self.direction[0], self.body[-1][1] + self.direction[1])
+        # set new head position by direction
+        head = (self.body[-1][0] + self.direction[0], self.body[-1][1] + self.direction[1])
 
-        # add next to body
-        self.body.append(next)
+        # add new head to body
+        self.body.append(head)
 
         # delete snake tail
         if (len(self.body) > self.length):
@@ -79,18 +79,19 @@ class Snake(Layer):
 
 
     def check_collision_food(self, food: Food):
+        # check if head is on food position
         if (food.position == self.body[-1]):
             self.length += 1
-            self.color.append(food.color)
+            self.color.append(food.color)  # add eaten food color as to snake tail
             food.new()
 
 
     def check_collision_border_and_self(self):
-        # leave screen x
+        # leave head screen x
         if (self.body[-1][0] < 0 or self.body[-1][0] >= self.bitmap.width):
             self.collision = True
         
-        # leave screen y
+        # leave head screen y
         if (self.body[-1][1] < 0 or self.body[-1][1] >= self.bitmap.height):
             self.collision = True
 

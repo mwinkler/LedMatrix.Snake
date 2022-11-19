@@ -5,6 +5,7 @@ from collections import namedtuple
 ControllerState = namedtuple("ControllerState", "direction button_top button_bottom")
 
 class Controller():
+    "Use poll() to get last input"
 
     def __init__(self):
         self.nc = adafruit_nunchuk.Nunchuk(board.I2C())
@@ -31,6 +32,7 @@ class Controller():
 
         if (self.nc.buttons[0]):
             self.button_top = True
+
         if (self.nc.buttons[1]):
             self.button_bottom = True
 
