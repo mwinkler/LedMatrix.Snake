@@ -1,25 +1,18 @@
-import board
 import time
 import displayio
 from adafruit_matrixportal.matrix import Matrix
-from controller import Controller
-from snake import Snake
-from food import Food
+import helper
+from game import Game
 
-matrix = Matrix(width=64, height=32, color_order="GBR")
-contoller = Controller(board.I2C())
-group = displayio.Group()
-snake = Snake(matrix.display, group)
-food = Food(matrix.display, group)
+helper.matrix = Matrix(width=64, height=32, color_order="GBR")
+helper.framegroup = displayio.Group()
+helper.matrix.display.show(helper.framegroup)
 
-matrix.display.show(group)
+game = Game()
+game.add_player()
 
 while True:
     
-    contoller.tick()
-    snake.tick(contoller, food)
-
-    if (snake.collision):
-        snake.reset()
+    game.tick()
 
     time.sleep(0.01)

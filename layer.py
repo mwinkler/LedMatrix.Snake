@@ -1,11 +1,10 @@
-import framebufferio
 import displayio
 import color
+import helper
 
 class Layer():
 
-   def __init__(self, framebuffer: framebufferio.FramebufferDisplay, container: displayio.Group):
-      self._framebuffer = framebuffer
-      self._bitmap = displayio.Bitmap(framebuffer.width, framebuffer.height, color.count)
-      self._tile = displayio.TileGrid(self._bitmap, pixel_shader=color.palette)
-      container.append(self._tile)
+   def __init__(self):
+      self.bitmap = displayio.Bitmap(helper.matrix.display.width, helper.matrix.display.height, color.count)
+      self.tile = displayio.TileGrid(self.bitmap, pixel_shader=color.palette)
+      helper.framegroup.append(self.tile)
