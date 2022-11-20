@@ -58,12 +58,11 @@ class Snake(Layer):
         if (state.direction == (0, 0)):
             return
 
-        # abort when player tries to invert direction
-        if (self.direction[0] - state.direction[0] in [-2, 2] or self.direction[1] - state.direction[1] in [-2, 2]):
-            return
-        
-        # set new snake direction
-        self.direction = state.direction
+        # ignore current direction from controller (prevent reverse)
+        if (self.direction[0] == 0 and state.direction[0] != 0):
+            self.direction = (state.direction[0], 0)
+        elif (self.direction[1] == 0 and state.direction[1] != 0):
+            self.direction = (0 ,state.direction[1])
 
 
     def move(self):

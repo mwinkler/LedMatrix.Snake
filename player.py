@@ -4,11 +4,11 @@ from food import Food
 
 class Player:
     
-    def __init__(self, number: int, food: Food):
-        self.number = number
+    def __init__(self, index: int, food: Food):
+        self.index = index
         self.food = food
         self.snake = Snake()
-        self.controller = Controller()
+        self.controller = Controller(index)
 
     def tick(self):
         self.controller.tick()
