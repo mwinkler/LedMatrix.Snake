@@ -1,27 +1,14 @@
 import adafruit_nunchuk
-import board
-import busio
-import adafruit_tca9548a
 from collections import namedtuple
+import helper
 
 ControllerState = namedtuple("ControllerState", "direction button_top button_bottom")
-
-#i2c = busio.I2C(board.SCL, board.SDA)
-i2c = board.I2C()
-# tca = adafruit_tca9548a.TCA9548A(i2c, address=0x70)
-
-# for channel in range(8):
-#     if tca[channel].try_lock():
-#         print("Channel {}:".format(channel), end="")
-#         addresses = tca[channel].scan()
-#         print([hex(address) for address in addresses if address != 0x70])
-#         tca[channel].unlock()
 
 class Controller():
     "Use poll() to get last input"
 
     def __init__(self, channel: int):
-        self.nc = adafruit_nunchuk.Nunchuk(i2c)
+        self.nc = adafruit_nunchuk.Nunchuk(helper.i2c_channels[0])
         self.reset()
 
     def reset(self):
