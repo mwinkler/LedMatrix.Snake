@@ -3,11 +3,11 @@ import time
 import displayio
 import helper
 from adafruit_matrixportal.matrix import Matrix
-import adafruit_bitbangio
+import bitbangio
 import adafruit_nunchuk
 from game import Game
 
-with adafruit_bitbangio.I2C(board.A1, board.A2) as i2c:
+with bitbangio.I2C(board.A1, board.A2) as i2c:
 
     nunchuck1 = adafruit_nunchuk.Nunchuk(board.I2C())
     nunchuck2 = adafruit_nunchuk.Nunchuk(i2c)
@@ -18,10 +18,11 @@ with adafruit_bitbangio.I2C(board.A1, board.A2) as i2c:
 
     game = Game()
     game.add_player(nunchuck1)
+    game.add_player(nunchuck2)
 
     while True:
         
         game.tick()
         #print(nunchuck1.values)
 
-        time.sleep(0.01)
+        time.sleep(0.05)

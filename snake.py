@@ -26,7 +26,7 @@ class Snake(Layer):
         self.ticker = Ticker()
 
     
-    def tick(self, controller: Controller, food: Food):
+    def tick(self, controller: Controller, foods: list[Food]):
         # wait until next render cycle by snake speed
         if (self.ticker.elapsed() < 1000.0 / self.speed):
             return
@@ -39,9 +39,12 @@ class Snake(Layer):
         # move snake
         self.move()
 
-        # check collisions
+        # check collision
         self.check_collision_border_and_self()
-        self.check_collision_food(food)
+
+        # check food
+        for food in foods:
+            self.check_collision_food(food)
 
         # render
         self.render()
