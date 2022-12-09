@@ -1,14 +1,14 @@
+import adafruit_nunchuk
 from snake import Snake
 from controller import Controller
 from food import Food
 
 class Player:
     
-    def __init__(self, index: int, food: Food):
-        self.index = index
+    def __init__(self, nunchuck: adafruit_nunchuk.Nunchuk, food: Food):
         self.food = food
         self.snake = Snake()
-        self.controller = Controller(index)
+        self.controller = Controller(nunchuck)
 
     def tick(self):
         self.controller.tick()
