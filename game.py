@@ -8,7 +8,7 @@ class Game:
         self.foods = []
         self.players: list[Player] = []
 
-        for i in range(5):
+        for i in range(4):
             self.foods.append(Food())
 
     def add_player(self, nunchuck: adafruit_nunchuk.Nunchuk):
